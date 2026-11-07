@@ -24,17 +24,20 @@
     "storybook:solid": "pnpm --filter @recoui/solid storybook",
     "storybook:react": "pnpm --filter @recoui/react storybook",
     "storybook:all": "pnpm -r --parallel run storybook",
-    "build-storybook": "pnpm -r --if-present run build-storybook"
+    "build-storybook": "pnpm -r --if-present run build-storybook",
+    "release": "lerna publish --no-private",
+    "release:existing": "lerna publish from-package --no-private"
   },
   "devDependencies": {
     "@types/node": "^22.12.0",
+    "@types/react": "^19.3.0",
     "@typescript-eslint/eslint-plugin": "7.9.0",
     "@typescript-eslint/parser": "7.9.0",
     "eslint": "8.57.0",
     "eslint-plugin-eslint-comments": "3.2.0",
     "eslint-plugin-no-only-tests": "3.1.0",
+    "lerna": "^10.1.1",
     "prettier": "3.0.0",
-    "typescript": "5.9.3",
-    "@types/react": "^19.3.0"
+    "typescript": "5.9.3"
   }
 }
