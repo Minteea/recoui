@@ -26,7 +26,9 @@
     "storybook:all": "pnpm -r --parallel run storybook",
     "build-storybook": "pnpm -r --if-present run build-storybook",
     "release": "lerna publish --no-private",
-    "release:existing": "lerna publish from-package --no-private"
+    "release:existing": "lerna publish from-package --no-private",
+    "pack:public": "lerna exec --no-private -- pnpm pack",
+    "pack:all": "lerna exec -- pnpm pack"
   },
   "devDependencies": {
     "@types/node": "^22.12.0",
