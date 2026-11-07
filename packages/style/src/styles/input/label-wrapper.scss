@@ -1,0 +1,37 @@
+@layer components.ui {
+  .ui-label-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    margin: 0;
+    vertical-align: middle;
+    font-family: inherit;
+    font-size: var(--font-size-input, 0.875rem);
+    color: var(--color-foreground);
+
+    > :is(.ui-checkbox, .ui-radio, .ui-switch, input[type="checkbox"], input[type="radio"]) {
+      flex-shrink: 0;
+    }
+
+    > .ui-label {
+      min-inline-size: 0;
+      font-family: inherit;
+      font-size: inherit;
+      line-height: 1.5;
+      color: inherit;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .ui-label-wrapper:has(
+      > :not(.ui-label):is(:disabled, [aria-disabled="true"]),
+      > :not(.ui-label) > :is(input, select, textarea):is(:disabled, [aria-disabled="true"]),
+      > .ui-switch input:is(:disabled, [aria-disabled="true"])
+    )
+    > .ui-label {
+    color: var(--color-disabled);
+  }
+}

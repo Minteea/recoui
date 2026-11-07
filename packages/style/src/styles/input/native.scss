@@ -1,0 +1,154 @@
+@layer components.ui {
+  // 数字与日期时间控件保留原生编辑、步进和选择器行为。
+  :is(input.ui-input, .ui-input > input):is(
+      [type="number"],
+      [type="date"],
+      [type="time"],
+      [type="datetime-local"],
+      [type="month"],
+      [type="week"]
+    ) {
+    appearance: auto;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :is(input.ui-input, .ui-input > input)::-webkit-datetime-edit {
+    padding-block: 0;
+  }
+
+  // 文件按钮沿用 Button 的默认背景、内边距和悬停色，外边框由输入框提供。
+  .ui-input[type="file"] {
+    display: block;
+    padding: 0;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .ui-input:has(> input[type="file"]) {
+    padding-inline: 0;
+    overflow: hidden;
+  }
+
+  .ui-input > input[type="file"] {
+    padding: 0;
+    cursor: pointer;
+  }
+
+  :is(input.ui-input, .ui-input > input)[type="file"] {
+    &::file-selector-button {
+      box-sizing: border-box;
+      min-block-size: calc(var(--ui-height) - 2px);
+      margin-inline-end: 0.625rem;
+      padding-block: 0;
+      padding-inline: 1rem;
+      border: 0;
+      border-inline-end: 1px solid var(--color-border);
+      background: var(--color-background);
+      color: inherit;
+      font: inherit;
+      cursor: inherit;
+      transition: background-color var(--transition);
+    }
+
+    &:is(:disabled, [aria-disabled="true"])::file-selector-button {
+      background: var(--color-input-fill);
+    }
+  }
+
+  input.ui-input[type="file"]:not(
+      :disabled,
+      [aria-disabled="true"],
+      [data-variant="filled"],
+      [data-variant="unstyled"]
+    )::file-selector-button:hover,
+  .ui-input:not([aria-disabled="true"], [data-variant="filled"], [data-variant="unstyled"])
+    > input[type="file"]:not(:disabled, [aria-disabled="true"])::file-selector-button:hover {
+    background: color-mix(
+      in oklch,
+      oklch(from var(--color-foreground) calc(l * 0.1 + 0.9) calc(c * 0.2) h) 20%,
+      var(--color-background)
+    );
+  }
+
+  // 融合外观不保留按钮底色和分隔线，悬停时也保持输入框的整体背景。
+  input.ui-input[type="file"]:is(
+      [data-variant="filled"],
+      [data-variant="unstyled"]
+    )::file-selector-button,
+  .ui-input:is([data-variant="filled"], [data-variant="unstyled"])
+    > input[type="file"]::file-selector-button {
+    border-inline-end: 0;
+    background: transparent;
+  }
+
+  input.ui-input[type="file"][data-variant="unstyled"]::file-selector-button,
+  .ui-input[data-variant="unstyled"] > input[type="file"]::file-selector-button {
+    min-block-size: var(--ui-height);
+    padding-inline-start: 0;
+  }
+
+  .ui-input:is([type="color"], :has(> input[type="color"])) {
+    inline-size: 4rem;
+    padding: 0.25rem;
+    cursor: pointer;
+  }
+
+  .ui-input > input[type="color"] {
+    padding: 0;
+  }
+
+  :is(input.ui-input, .ui-input > input)[type="color"] {
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+
+    &::-webkit-color-swatch {
+      border: 0;
+      border-radius: var(--radius-sm);
+    }
+
+    &::-moz-color-swatch {
+      border: 0;
+      border-radius: var(--radius-sm);
+    }
+  }
+
+  .ui-input:is([type="color"], :has(> input[type="color"])):is(
+      :disabled,
+      [aria-disabled="true"],
+      :has(> input:is(:disabled, [aria-disabled="true"]))
+    ) {
+    --ui-display-color: var(--color-disabled);
+    opacity: 0.6;
+  }
+
+  .ui-input:is(
+      :disabled,
+      [aria-disabled="true"],
+      :has(> input:is(:disabled, [aria-disabled="true"]))
+    ),
+  .ui-input > input:is(:disabled, [aria-disabled="true"]) {
+    cursor: not-allowed;
+  }
+
+  .ui-input[type="image"] {
+    inline-size: auto;
+    max-inline-size: 100%;
+    min-block-size: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .ui-input[type="hidden"] {
+    display: none;
+  }
+
+  // 列表选择器使用原生列表布局，不应用单选下拉框的 base-select 外观。
+  select.ui-input:is([multiple], [size]) {
+    appearance: auto;
+    display: block;
+    padding-block: 0.25rem;
+  }
+}

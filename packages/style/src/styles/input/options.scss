@@ -1,0 +1,99 @@
+@layer components.ui {
+  %ui-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0.375rem 0.5rem;
+    border: 0;
+    border-radius: max(0px, calc(var(--ui-radius, var(--radius)) - 0.125rem));
+    outline: 0 solid transparent;
+    outline-offset: -2px;
+    background: transparent;
+    color: var(--color-foreground);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: start;
+    text-decoration: none;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+
+    &:is(:hover, :focus-visible, [data-highlighted="true"]):not(:disabled, [aria-disabled="true"]) {
+      background: var(--color-background-hover, var(--color-input-fill));
+    }
+
+    &:is(:checked, [aria-selected="true"], [aria-checked="true"]) {
+      background: var(--color-input-fill);
+    }
+
+    &:focus-visible {
+      outline-width: 2px;
+      outline-color: var(--ui-color, var(--color-primary));
+    }
+  }
+
+  %ui-option-disabled {
+    background: transparent;
+    color: var(--color-disabled);
+    cursor: not-allowed;
+  }
+
+  %ui-optgroup {
+    display: block;
+    box-sizing: border-box;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0.25rem 0;
+    border: 0;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+    line-height: 1.5;
+
+    &:is(:disabled, [aria-disabled="true"]) {
+      color: var(--color-disabled);
+    }
+  }
+
+  %ui-optgroup-legend {
+    display: block;
+    box-sizing: border-box;
+    inline-size: 100%;
+    margin: 0;
+    padding: 0.25rem 0.5rem;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .ui-option,
+  select.ui-input option {
+    @extend %ui-option;
+
+    &:is(:disabled, [aria-disabled="true"]) {
+      @extend %ui-option-disabled;
+    }
+  }
+
+  .ui-optgroup,
+  select.ui-input optgroup {
+    @extend %ui-optgroup;
+  }
+
+  .ui-optgroup-legend,
+  select.ui-input legend {
+    @extend %ui-optgroup-legend;
+  }
+
+  .ui-optgroup:is(:disabled, [aria-disabled="true"]) .ui-option,
+  select.ui-input optgroup:is(:disabled, [aria-disabled="true"]) option {
+    @extend %ui-option-disabled;
+  }
+}

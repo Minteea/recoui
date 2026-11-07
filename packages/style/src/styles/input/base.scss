@@ -1,0 +1,99 @@
+@layer components.ui {
+  // 表单元素基础设置
+  :where(
+      .ui-button,
+      .ui-addon-button,
+      .ui-checkbox,
+      .ui-radio,
+      .ui-switch,
+      .ui-slider,
+      .ui-tabs-list,
+      .ui-tab,
+      .ui-input,
+      .ui-label
+    ) {
+    &,
+    & * {
+      box-sizing: border-box;
+      font-family: inherit;
+      appearance: none;
+      position: relative;
+      margin: 0;
+    }
+  }
+
+  // 共用 --ui-radius，让原生元素及其选择器弹层沿用同一圆角设置。
+  :is(.ui-input, .ui-button)[data-radius] {
+    --ui-radius: attr(data-radius type(*), var(--radius));
+
+    &:is([data-radius="default"], [data-radius=""]) {
+      --ui-radius: var(--radius);
+    }
+
+    &[data-radius="rounded"] {
+      --ui-radius: 9999px;
+    }
+  }
+
+  // 默认值保留各控件原有宽度；显式尺寸优先于原生输入类型的专用宽度。
+  :is(.ui-input, .ui-button, .ui-addon-button)[data-width]:not(
+      [data-width="default"],
+      [data-width=""],
+      [type="hidden"]
+    ) {
+    inline-size: attr(data-width type(*));
+
+    &[data-width="block"] {
+      display: var(--ui-block-display, flex);
+      inline-size: 100%;
+    }
+
+    &[data-width="icon"] {
+      inline-size: var(--ui-height);
+      block-size: var(--ui-height);
+      min-block-size: var(--ui-height);
+      padding: 0;
+      flex-shrink: 0;
+      text-align: center;
+    }
+  }
+
+  :is(
+      .ui-button,
+      .ui-addon-button,
+      .ui-input,
+      .ui-radio,
+      .ui-checkbox,
+      .ui-switch,
+      .ui-slider,
+      .ui-tabs-list,
+      .ui-tab,
+      .ui-progress,
+      .ui-meter,
+      .ui-badge,
+      .ui-pill
+    )[data-color] {
+    --ui-color: attr(data-color type(<color>));
+    &[data-color="neutral"] {
+      --ui-color: var(--color-foreground);
+    }
+    &[data-color="primary"] {
+      --ui-color: var(--color-primary);
+    }
+    &[data-color="success"] {
+      --ui-color: var(--color-success);
+    }
+    &[data-color="danger"] {
+      --ui-color: var(--color-danger);
+    }
+    &[data-color="error"] {
+      --ui-color: var(--color-error);
+    }
+    &[data-color="warning"] {
+      --ui-color: var(--color-warning);
+    }
+    &[data-color="info"] {
+      --ui-color: var(--color-info);
+    }
+  }
+}

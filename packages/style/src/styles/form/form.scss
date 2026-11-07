@@ -1,0 +1,131 @@
+@layer components.ui {
+  :where(.ui-form, .ui-fieldset, .ui-legend, .ui-progress, .ui-meter) {
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: var(--color-foreground);
+  }
+
+  .ui-form {
+    display: grid;
+    gap: 1rem;
+    min-inline-size: 0;
+    margin: 0;
+    text-align: start;
+  }
+
+  .ui-fieldset {
+    min-inline-size: 0;
+    margin: 0;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+
+    &:disabled {
+      background: color-mix(in oklch, var(--color-foreground) 2%, var(--color-background));
+    }
+
+    &:disabled :is(.ui-label, .ui-legend) {
+      color: var(--color-disabled);
+    }
+  }
+
+  .ui-legend {
+    padding-inline: 0.375rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .ui-datalist {
+    display: none;
+  }
+
+  .ui-progress,
+  .ui-meter {
+    --ui-color: var(--color-primary);
+    appearance: none;
+    display: block;
+    inline-size: 100%;
+    block-size: 0.5rem;
+    overflow: hidden;
+    border: 0;
+    border-radius: var(--radius);
+    background: var(--color-input-fill);
+    accent-color: var(--ui-color);
+  }
+
+  .ui-progress::-webkit-progress-bar {
+    border-radius: inherit;
+    background: var(--color-input-fill);
+  }
+
+  .ui-progress::-webkit-progress-value {
+    border-radius: inherit;
+    background: var(--ui-color);
+  }
+
+  .ui-progress::-moz-progress-bar {
+    border-radius: inherit;
+    background: var(--ui-color);
+  }
+
+  .ui-progress:indeterminate::-webkit-progress-bar {
+    background: var(--ui-color);
+    clip-path: inset(0 32.5% round var(--radius));
+    animation: ui-progress-indeterminate 1.4s linear infinite;
+  }
+
+  .ui-meter {
+    --ui-color: var(--color-success);
+  }
+
+  .ui-meter::-webkit-meter-bar {
+    block-size: 0.5rem;
+    border: 0;
+    border-radius: inherit;
+    background: var(--color-input-fill);
+    box-shadow: none;
+  }
+
+  .ui-meter::-webkit-meter-optimum-value {
+    border-radius: inherit;
+    background: var(--ui-color);
+  }
+
+  .ui-meter::-webkit-meter-suboptimum-value {
+    border-radius: inherit;
+    background: var(--color-warning);
+  }
+
+  .ui-meter::-webkit-meter-even-less-good-value {
+    border-radius: inherit;
+    background: var(--color-error);
+  }
+
+  .ui-meter:-moz-meter-optimum::-moz-meter-bar {
+    background: var(--ui-color);
+  }
+
+  .ui-meter:-moz-meter-sub-optimum::-moz-meter-bar {
+    background: var(--color-warning);
+  }
+
+  .ui-meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+    background: var(--color-error);
+  }
+
+  @keyframes ui-progress-indeterminate {
+    from {
+      clip-path: inset(0 100% 0 -35% round var(--radius));
+    }
+    to {
+      clip-path: inset(0 -35% 0 100% round var(--radius));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ui-progress:indeterminate::-webkit-progress-bar {
+      animation: none;
+    }
+  }
+}

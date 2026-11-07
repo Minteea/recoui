@@ -1,0 +1,93 @@
+@layer components.ui {
+  .ui-dropdown {
+    position: fixed;
+    z-index: var(--ui-dropdown-z-index, 1050);
+    display: block;
+    box-sizing: border-box;
+    inline-size: max-content;
+    min-inline-size: min(12rem, calc(100vw - 2rem));
+    max-inline-size: calc(100vw - 2rem);
+    max-block-size: min(var(--ui-dropdown-max-height, 20rem), calc(100vh - 2rem));
+    max-block-size: min(var(--ui-dropdown-max-height, 20rem), calc(100dvh - 2rem));
+    margin: 0;
+    padding: 0.25rem;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--color-border);
+    border-radius: var(--ui-radius, var(--radius));
+    outline: none;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    box-shadow: var(--shadow-sm);
+    font-family: var(--font-family, inherit);
+    font-size: var(--font-size-input, 0.875rem);
+    line-height: 1.5;
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--transition),
+      visibility var(--transition),
+      display var(--transition);
+    transition-behavior: allow-discrete;
+
+    // 按钮、链接及普通元素修饰的选项均占据菜单的可用宽度。
+    :where(.ui-option) {
+      inline-size: 100%;
+    }
+
+    :where(hr) {
+      margin: 0.25rem 0;
+      border: 0;
+      border-block-start: 1px solid var(--color-border);
+    }
+
+    &[hidden] {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+  }
+
+  .ui-dropdown-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    vertical-align: middle;
+
+    > .ui-dropdown {
+      position: absolute;
+      inset-inline-start: 0;
+      inset-block-start: calc(100% + var(--ui-dropdown-offset, 0.25rem));
+    }
+
+    &:has(> .ui-input) > .ui-dropdown {
+      inline-size: 100%;
+    }
+
+    &[data-side="top"] > .ui-dropdown {
+      inset-block-start: auto;
+      inset-block-end: calc(100% + var(--ui-dropdown-offset, 0.25rem));
+    }
+
+    &[data-align="end"] > .ui-dropdown {
+      inset-inline-start: auto;
+      inset-inline-end: 0;
+    }
+  }
+
+  @starting-style {
+    .ui-dropdown {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ui-dropdown {
+      transition: none;
+    }
+  }
+}

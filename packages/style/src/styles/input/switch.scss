@@ -1,0 +1,111 @@
+@layer components.ui {
+  .ui-switch {
+    --ui-color: var(--color-primary);
+    --ui-switch-width: 2.25rem;
+    --ui-switch-height: 1.25rem;
+    --ui-switch-padding: 2px;
+    --ui-switch-border: 1px;
+    --ui-switch-thumb-size: calc(
+      var(--ui-switch-height) - 2 * var(--ui-switch-border) - 2 * var(--ui-switch-padding)
+    );
+    --ui-switch-thumb-start: var(--ui-switch-padding);
+
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    inline-size: var(--ui-switch-width);
+    block-size: var(--ui-switch-height);
+    margin: 0;
+    padding: var(--ui-switch-padding);
+    appearance: none;
+    vertical-align: middle;
+    border: var(--ui-switch-border) solid var(--color-border);
+    border-radius: 9999px;
+    outline: 0 solid transparent;
+    outline-offset: 0;
+    background: var(--color-border);
+    color: var(--color-foreground);
+    font: inherit;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color var(--transition),
+      border-color var(--transition),
+      box-shadow var(--transition),
+      outline var(--transition);
+
+    // 没有 input 时使用元素自身的状态；有 input 时以原生 checked 状态为准。
+    &:is(:checked, [aria-checked="true"], [aria-pressed="true"]):not(:has(input)),
+    &:has(input:checked) {
+      --ui-switch-thumb-start: calc(100% - var(--ui-switch-thumb-size) - var(--ui-switch-padding));
+      border-color: var(--ui-color);
+      background: var(--ui-color);
+    }
+
+    &:focus-visible,
+    &:has(input:focus-visible) {
+      outline-width: 4px;
+      border-color: var(--ui-color);
+      outline-color: oklch(from var(--ui-color) l c h / 20%);
+    }
+
+    &:is(:disabled, [aria-disabled="true"], :has(input:is(:disabled, [aria-disabled="true"]))) {
+      --ui-color: var(--color-disabled);
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  // 显式 thumb 与自动生成的 thumb 共用尺寸、位置和动画规则。
+  .ui-switch .ui-switch-thumb,
+  .ui-switch:not(:has(.ui-switch-thumb))::after {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    inset-block-start: 50%;
+    inset-inline-start: var(--ui-switch-thumb-start);
+    inline-size: var(--ui-switch-thumb-size);
+    block-size: var(--ui-switch-thumb-size);
+    border: 0;
+    border-radius: 9999px;
+    background: var(--color-white, white);
+    // box-shadow: 0 1px 2px rgb(0 0 0 / 15%);
+    pointer-events: none;
+    transform: translateY(-50%);
+    transition: inset-inline-start var(--transition);
+  }
+
+  .ui-switch:not(:has(.ui-switch-thumb))::after {
+    content: "";
+  }
+
+  // 中间包裹元素不作为定位参照，嵌套 input 和 thumb 均以开关自身定位。
+  .ui-switch :has(:is(input, .ui-switch-thumb)):not(.ui-switch-thumb) {
+    position: static;
+  }
+
+  // 视觉隐藏但保留原生输入的点击区域、键盘聚焦、disabled 和表单行为。
+  .ui-switch input {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    cursor: inherit;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ui-switch,
+    .ui-switch .ui-switch-thumb,
+    .ui-switch::after {
+      transition: none;
+    }
+  }
+}

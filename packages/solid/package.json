@@ -1,0 +1,80 @@
+{
+  "name": "@recoui/solid",
+  "version": "0.0.0",
+  "description": "Solid components built with Reco UI styles",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "main": "./dist/server.js",
+  "module": "./dist/server.js",
+  "types": "./dist/index.d.ts",
+  "browser": {
+    "./dist/server.js": "./dist/index.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "worker": {
+        "solid": "./dist/server.jsx",
+        "import": "./dist/server.js"
+      },
+      "browser": {
+        "solid": {
+          "development": "./dist/dev.jsx",
+          "import": "./dist/index.jsx"
+        },
+        "development": "./dist/dev.js",
+        "import": "./dist/index.js"
+      },
+      "node": {
+        "solid": "./dist/server.jsx",
+        "import": "./dist/server.js"
+      },
+      "solid": {
+        "development": "./dist/dev.jsx",
+        "import": "./dist/index.jsx"
+      },
+      "development": "./dist/dev.js",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run && vitest run --mode ssr",
+    "storybook": "storybook dev -p 36007",
+    "build-storybook": "storybook build",
+    "prepack": "pnpm run build"
+  },
+  "dependencies": {
+    "@recoui/style": "workspace:*",
+    "clsx": "2.1.1"
+  },
+  "peerDependencies": {
+    "solid-js": ">=1.8 <2"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "10.4.2",
+    "@storybook/addon-docs": "10.4.2",
+    "@types/node": "^22.12.0",
+    "jsdom": "^24.0.0",
+    "sass": "1.100.0",
+    "solid-js": "1.8.17",
+    "storybook": "10.4.2",
+    "storybook-solidjs-vite": "^10.1.1",
+    "tsup": "^8.0.2",
+    "tsup-preset-solid": "^2.2.0",
+    "typescript": "^5.7.2",
+    "vite": "^7.1.4",
+    "vite-plugin-solid": "2.11.9",
+    "vitest": "^4.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

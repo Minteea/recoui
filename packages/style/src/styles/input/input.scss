@@ -1,0 +1,203 @@
+@layer components.ui {
+  // input + button 结构性样式
+  .ui-input,
+  .ui-button,
+  .ui-addon-button {
+    display: inline-flex;
+    font-size: var(--font-size-input, 0.875rem);
+    min-block-size: var(--ui-height);
+    --ui-height: var(--height-input);
+  }
+
+  // label 结构性样式
+  .ui-label {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  // input 结构性样式
+  .ui-input {
+    --ui-padding-inline: 0.625rem;
+    --ui-addon-height: max(0px, calc(var(--ui-height) - 0.5rem));
+    align-items: center;
+    inline-size: 100%;
+    min-inline-size: 0;
+    padding-inline: var(--ui-padding-inline);
+    padding-block: 0;
+
+    border: 1px solid var(--color-border, transparent);
+    border-radius: var(--ui-radius, 0);
+
+    --ui-display-color: var(--ui-color);
+
+    outline: 0 solid transparent;
+
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition),
+      background-color var(--transition),
+      outline var(--transition);
+
+    &:is(:focus-visible, select:open, select:focus),
+    &:has(> input:focus-visible),
+    &:has(> .ui-pill .ui-pill-button:focus-visible) {
+      outline-width: 4px;
+      border-color: var(--ui-display-color);
+      outline-color: oklch(from var(--ui-display-color) l c h / 20%);
+    }
+  }
+
+  .ui-input > input:not([type="hidden"]) {
+    flex: 1 1 0%;
+    align-self: stretch;
+    inline-size: 0;
+    min-inline-size: 0;
+    min-block-size: 0;
+    padding-block: 0;
+    // padding-inline: var(--ui-padding-inline);
+    border: 0;
+    border-radius: inherit;
+    outline: none;
+    background: transparent;
+    box-shadow: none;
+    color: inherit;
+    font: inherit;
+    text-align: inherit;
+    cursor: inherit;
+  }
+
+  .ui-input[data-width="icon"] {
+    --ui-padding-inline: 0;
+  }
+
+  // 前后修饰组按 DOM 顺序排列，输入区域收缩时修饰内容保持原有尺寸。
+  .ui-input:has(> .ui-addon) {
+    column-gap: 0.5rem;
+  }
+
+  .ui-input > .ui-addon {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 0.25rem;
+    white-space: nowrap;
+    cursor: default;
+  }
+
+  .ui-input:is([aria-disabled="true"], :has(> input:disabled)) > .ui-addon {
+    cursor: not-allowed;
+  }
+
+  // 多值输入保留直接嵌套关系，值标签和编辑区域可自然换行。
+  .ui-input:has(> .ui-pill) {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    padding-block: 0.125rem;
+
+    > input:not([type="hidden"]) {
+      flex: 1 1 4rem;
+      align-self: center;
+      min-inline-size: min(4rem, 100%);
+      block-size: 1.25rem;
+    }
+
+    > .ui-addon:last-child {
+      margin-inline-start: auto;
+    }
+  }
+
+  // textarea 结构性样式
+  textarea.ui-input {
+    // 多行编辑区域保留原有布局，不应用单行控件的垂直居中。
+    // align-items: normal;
+    padding-block: 0.5rem;
+    min-block-size: calc(var(--ui-height) + 0.5rem);
+    resize: vertical;
+  }
+
+  // select 结构性样式
+  @supports (appearance: base-select) {
+    select.ui-input:not([multiple]):not([size]) {
+      appearance: base-select;
+      align-items: center;
+    }
+    select.ui-input::picker(select) {
+      appearance: base-select;
+      border-radius: var(--ui-radius);
+      border-color: var(--color-border);
+      box-shadow: var(--shadow-sm);
+      padding: 0.25rem;
+    }
+  }
+
+  // input 基本外观
+  .ui-input {
+    --ui-color: var(--color-primary, grey);
+    --ui-radius: var(--radius);
+    background: var(--color-background, transparent);
+    color: var(--color-foreground, currentColor);
+  }
+  .ui-input:is(
+      :disabled,
+      [aria-disabled="true"],
+      :has(> input:is(:disabled, [aria-disabled="true"]))
+    ) {
+    color: var(--color-disabled);
+    background: color-mix(in oklch, var(--color-foreground) 2%, var(--color-background));
+    cursor: not-allowed;
+  }
+  .ui-input:is(
+      :invalid,
+      [aria-invalid="true"],
+      [data-warning],
+      :has(> input:is(:invalid, [aria-invalid="true"], [data-warning]))
+    ) {
+    border-color: var(--ui-display-color);
+  }
+  .ui-input:is([data-warning], :has(> input[data-warning])) {
+    --ui-display-color: var(--color-warning);
+  }
+  .ui-input:is(:invalid, [aria-invalid="true"], :has(> input:is(:invalid, [aria-invalid="true"]))) {
+    --ui-display-color: var(--color-error);
+  }
+
+  .ui-input[data-variant="filled"] {
+    border-color: transparent;
+    background: var(--color-input-fill);
+
+    &:is(
+        :invalid,
+        [aria-invalid="true"],
+        [data-warning],
+        :has(> input:is(:invalid, [aria-invalid="true"], [data-warning]))
+      ) {
+      border-color: var(--ui-display-color);
+    }
+    &:is(:disabled, [aria-disabled="true"], :has(> input:is(:disabled, [aria-disabled="true"]))) {
+      background: oklch(from var(--color-input-fill) l c h / 50%);
+    }
+  }
+
+  .ui-input[data-variant="unstyled"] {
+    --ui-padding-inline: 0;
+    padding-inline: 0;
+
+    border: 0 none transparent;
+    outline: 0 none transparent;
+    background: transparent;
+
+    &:is(
+        :invalid,
+        [aria-invalid="true"],
+        [data-warning],
+        :has(> input:is(:invalid, [aria-invalid="true"], [data-warning]))
+      ) {
+      color: var(--ui-display-color);
+    }
+  }
+
+  .ui-input :where(input:not([type="hidden"]), textarea, select) {
+    display: inline-flex;
+    font-size: 0.875rem;
+  }
+}

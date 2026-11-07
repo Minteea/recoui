@@ -1,0 +1,147 @@
+@layer components.ui {
+  %ui-ghost-button-hover {
+    background-color: oklch(from var(--ui-display-color) calc(l * 0.1 + 0.9) calc(c * 0.2) h / 20%);
+  }
+
+  // button 结构性样式
+  .ui-button,
+  .ui-addon-button {
+    align-items: center;
+    justify-content: center;
+    min-block-size: var(--ui-height);
+    padding-block: 0;
+    padding-inline: 1rem;
+    cursor: pointer;
+
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: var(--ui-radius, 0);
+
+    --ui-display-color: var(--ui-color);
+
+    transition:
+      border-color var(--transition),
+      box-shadow var(--transition),
+      background-color var(--transition),
+      transform var(--transition),
+      outline var(--transition);
+  }
+
+  // button 通用外观
+  .ui-button,
+  .ui-addon-button {
+    --ui-radius: var(--radius);
+    --ui-color: var(--color-foreground, currentColor);
+    outline: 0 solid transparent;
+    &:focus-visible {
+      outline-width: 4px;
+      border-color: var(--ui-display-color);
+      outline-color: oklch(from var(--ui-display-color) l c h / 20%);
+    }
+  }
+
+  // button 按下位移
+  .ui-button {
+    &:active:not(:disabled, [aria-disabled="true"]) {
+      transform: translateY(1px);
+    }
+  }
+
+  // button 默认外观
+  .ui-button:is([data-variant="default"], [data-variant=""], :not([data-variant])) {
+    border-color: var(--color-border);
+    background: var(--color-background);
+    color: var(--ui-display-color);
+
+    &:hover:not(:disabled, [aria-disabled="true"]) {
+      background: color-mix(
+        in oklch,
+        oklch(from var(--color-foreground) calc(l * 0.1 + 0.9) calc(c * 0.2) h) 20%,
+        var(--color-background)
+      );
+    }
+  }
+
+  // button 特殊外观
+  .ui-button[data-variant="outline"] {
+    background: transparent;
+    border-color: var(--ui-display-color);
+    color: var(--ui-display-color);
+
+    &:hover:not(:disabled, [aria-disabled="true"]) {
+      background: oklch(from var(--ui-display-color) calc(l * 0.1 + 0.9) calc(c * 0.2) h / 20%);
+    }
+  }
+
+  .ui-button[data-variant="filled"] {
+    background: var(--ui-display-color);
+    border-color: transparent;
+    color: var(--color-white, white);
+
+    &:hover:not(:disabled, [aria-disabled="true"]) {
+      background: oklch(from var(--ui-display-color) calc(l + 0.1) c h);
+    }
+    &:focus-visible {
+      border-color: var(--color-white, white);
+      outline-color: oklch(from var(--ui-display-color) l c h / 40%);
+    }
+  }
+
+  .ui-button[data-variant="light"] {
+    background: oklch(from var(--ui-display-color) calc(l * 0.05 + 0.95) calc(c * 0.1) h);
+    border-color: transparent;
+    color: var(--ui-display-color);
+
+    &:hover:not(:disabled, [aria-disabled="true"]) {
+      background: oklch(from var(--ui-display-color) calc(l * 0.05 + 0.925) calc(c * 0.15) h);
+    }
+    &:focus-visible {
+      border-color: var(--ui-display-color);
+    }
+  }
+
+  .ui-button[data-variant="ghost"],
+  .ui-addon-button {
+    background: transparent;
+    border-color: transparent;
+    color: var(--ui-display-color);
+
+    &:hover:not(:disabled, [aria-disabled="true"]) {
+      @extend %ui-ghost-button-hover;
+    }
+  }
+
+  .ui-button[data-variant="text"] {
+    background: transparent;
+    border-color: transparent;
+    color: var(--ui-display-color);
+  }
+
+  :is(.ui-button, .ui-addon-button):is(:disabled, [aria-disabled="true"]) {
+    border-color: var(--color-border);
+    background: var(--color-input-fill);
+    color: var(--color-disabled);
+    cursor: not-allowed;
+  }
+
+  // 复用 Ghost 按钮的交互，缩小高度、内边距和焦点环以适配输入框内部。
+  .ui-addon-button {
+    --ui-height: var(--ui-addon-height, max(0px, calc(var(--height-input) - 0.5rem)));
+    --ui-radius: max(0px, calc(var(--radius) - 0.125rem));
+    block-size: var(--ui-height);
+    flex: 0 0 auto;
+    gap: 0.25rem;
+    padding-inline: 0.5rem;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+
+    &:focus-visible {
+      outline-width: 2px;
+    }
+
+    &:is(:disabled, [aria-disabled="true"]) {
+      border-color: transparent;
+      background: transparent;
+    }
+  }
+}

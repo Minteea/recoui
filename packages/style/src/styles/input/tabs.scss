@@ -1,0 +1,179 @@
+@layer components.ui {
+  .ui-tabs-list {
+    --ui-color: var(--color-primary);
+    display: inline-flex;
+    inline-size: fit-content;
+    align-items: stretch;
+    gap: 0.25rem;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding: 0;
+    border: 0;
+    // border-block-end: 1px solid var(--color-border);
+    overflow-x: auto;
+    font-size: var(--font-size-input, 0.875rem);
+
+    // 纵向排列
+    &[aria-orientation="vertical"] {
+      flex-direction: column;
+      border-block-end: 0;
+      overflow-x: visible;
+
+      > .ui-tab {
+        justify-content: flex-start;
+        white-space: normal;
+      }
+    }
+    // 非纵向排列
+    :not([aria-orientation="vertical"]) {
+      flex-direction: row;
+    }
+  }
+
+  // 通用样式
+  .ui-tab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    gap: 0.375rem;
+    min-block-size: var(--height-input, 2rem);
+    padding-inline: 0.75rem;
+    padding-block: 0.25rem;
+    border: 0;
+    border-radius: var(--radius);
+    outline: 0 solid transparent;
+    outline-offset: -2px;
+    background: transparent;
+    color: var(--color-foreground);
+    font: inherit;
+    font-size: var(--font-size-input, 0.875rem);
+    text-align: start;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      color var(--transition),
+      background-color var(--transition),
+      outline var(--transition);
+
+    &:focus-visible {
+      outline-width: 2px;
+      outline-color: var(--ui-color, var(--color-primary));
+    }
+  }
+
+  .ui-tabs-list {
+    // 未选中的 hover 样式
+    &:not([aria-disabled="true"])
+      > .ui-tab:hover:not(:disabled, [aria-disabled="true"], [aria-selected="true"]) {
+      background: var(--color-background-hover);
+    }
+  }
+
+  // 默认样式
+  .ui-tabs-list:is([data-variant="default"], [data-variant=""], :not([data-variant])) > .ui-tab {
+    &[aria-selected="true"] {
+      background: var(--color-input-fill);
+    }
+  }
+
+  // 填充样式
+  .ui-tabs-list[data-variant="filled"] {
+    > .ui-tab {
+      &[aria-selected="true"] {
+        background: var(--ui-color, var(--color-primary));
+        color: var(--color-white);
+        &:is(:disabled, [aria-disabled="true"]) {
+          background: var(--color-disabled);
+        }
+      }
+    }
+    &[aria-disabled="true"] > .ui-tab {
+      &[aria-selected="true"] {
+        background: var(--color-disabled);
+      }
+    }
+  }
+
+  // 下划线样式
+  .ui-tabs-list[data-variant="underline"] {
+    &:not([aria-orientation="vertical"]) {
+      & > .ui-tab::after {
+        inset-inline: 0.75rem;
+        inset-block-end: 0;
+        block-size: 2px;
+      }
+    }
+    &[aria-orientation="vertical"] {
+      & > .ui-tab::after {
+        inset-block: 0.375rem;
+        inset-inline-start: auto;
+        inset-inline-end: 0;
+        inline-size: 2px;
+        block-size: auto;
+      }
+    }
+    & > .ui-tab {
+      &::after {
+        content: "";
+        position: absolute;
+        border-radius: 9999px;
+        background: var(--ui-color, var(--color-primary));
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--transition);
+      }
+      &[aria-selected="true"] {
+        &::after {
+          opacity: 1;
+        }
+      }
+      &:is(:disabled, [aria-disabled="true"])::after {
+        background: var(--color-disabled);
+      }
+    }
+    &[aria-disabled="true"] > .ui-tab::after {
+      background: var(--color-disabled);
+    }
+    // hover 样式
+    &:not([aria-disabled="true"]) > .ui-tab:hover:not(:disabled, [aria-disabled="true"]) {
+      background: var(--color-background-hover);
+    }
+  }
+
+  // 包裹样式
+  .ui-tabs-list[data-variant="wrapped"] {
+    --ui-wrap-padding: 0.25rem;
+    padding: var(--ui-wrap-padding);
+    border-radius: var(--radius);
+    background: var(--color-input-fill);
+    gap: 0;
+    & > .ui-tab {
+      border-radius: calc(var(--radius) - var(--ui-wrap-padding));
+      min-block-size: calc(var(--height-input, 2rem) - var(--ui-wrap-padding) * 2);
+      padding-block: 0.125rem;
+
+      &[aria-selected="true"] {
+        background: var(--color-white);
+      }
+    }
+  }
+
+  // aria-disabled 只描述状态；非原生按钮的事件拦截由使用方负责。
+  .ui-tab:is(:disabled, [aria-disabled="true"]),
+  .ui-tabs-list[aria-disabled="true"] > .ui-tab {
+    background: transparent;
+    color: var(--color-disabled);
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ui-tab,
+    .ui-tab::after {
+      transition: none;
+    }
+  }
+}

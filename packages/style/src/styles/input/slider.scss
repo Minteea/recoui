@@ -1,0 +1,218 @@
+%slider-track {
+  block-size: 0.375rem;
+  border-radius: 9999px;
+  background: var(--color-input-fill);
+}
+
+// 跨引擎原生伪元素必须保留独立选择器，避免 @extend 将它们合并后失效。
+@mixin slider-native-track {
+  block-size: 0.375rem;
+  border-radius: 9999px;
+  background: linear-gradient(
+    var(--ui-slider-direction),
+    var(--ui-slider-color) 0 var(--ui-slider-progress),
+    var(--color-input-fill) var(--ui-slider-progress) 100%
+  );
+}
+
+@mixin slider-thumb {
+  box-sizing: border-box;
+  inline-size: var(--ui-thumb-width, 1rem);
+  block-size: var(--ui-thumb-width, 1rem);
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  outline: 0 solid transparent;
+  outline-offset: 0;
+  background: var(--color-background);
+  transition:
+    outline var(--transition),
+    border var(--transition);
+}
+
+%slider-thumb {
+  @include slider-thumb;
+}
+
+@mixin slider-thumb-focus {
+  border-color: var(--ui-slider-color);
+  outline-width: 4px;
+  outline-color: oklch(from var(--ui-slider-color) l c h / 20%);
+}
+
+%slider-thumb-focus {
+  @include slider-thumb-focus;
+}
+
+@layer components.ui {
+  .ui-slider {
+    --ui-color: var(--color-primary);
+    --ui-slider-color: var(--ui-color);
+    --ui-slider-progress: clamp(0%, var(--ui-slider-position, 0%), 100%);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: var(--ui-thumb-width, 1rem);
+    block-size: max(var(--height-input, 2rem), var(--ui-thumb-width, 1rem));
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    user-select: none;
+
+    &:is(:disabled, [aria-disabled="true"], :has(> input:is(:disabled, [aria-disabled="true"]))) {
+      --ui-slider-color: var(--color-disabled);
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  .ui-slider > .ui-slider-track {
+    @extend %slider-track;
+    position: relative;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    // margin-inline: calc(var(--ui-thumb-width, 1rem) / 2);
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .ui-slider-range {
+    inline-size: var(--ui-slider-progress);
+    block-size: 100%;
+    border-radius: inherit;
+    background: var(--ui-slider-color);
+  }
+
+  .ui-slider-thumb {
+    @extend %slider-thumb;
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inset-block-start: 50%;
+    inset-inline-start: var(--ui-slider-progress);
+    transform: translateX(calc(-1 * var(--ui-slider-progress))) translateY(-50%);
+    pointer-events: auto;
+  }
+
+  // 原生 range 位于 thumb 上方，将其悬停反馈映射到可见 thumb，并保留拖动能力。
+  .ui-slider:not([aria-disabled="true"], :has(> input:is(:disabled, [aria-disabled="true"]))) {
+    > .ui-slider-thumb:hover,
+    &:has(> input[type="range"]:hover) > .ui-slider-thumb {
+      border-color: var(--ui-slider-color);
+    }
+  }
+
+  // 位移百分比相对于 thumb 自身，保证不同宽度下两端都留在容器内。
+  .ui-slider:dir(rtl) > .ui-slider-thumb {
+    transform: translateX(var(--ui-slider-progress)) translateY(-50%);
+  }
+
+  .ui-slider:focus-visible > .ui-slider-thumb,
+  .ui-slider:has(> input:focus-visible) > .ui-slider-thumb {
+    @extend %slider-thumb-focus;
+  }
+
+  // 透明覆盖层保留原生 range 的拖动、键盘、表单提交及 disabled 行为。
+  .ui-slider > input[type="range"] {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    cursor: inherit;
+  }
+
+  // 隐藏的原生 thumb 与可见 thumb 使用相同宽度，使指针和值的位置一致。
+  .ui-slider > input[type="range"]::-webkit-slider-runnable-track {
+    block-size: 0.375rem;
+  }
+
+  .ui-slider > input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    inline-size: var(--ui-thumb-width, 1rem);
+    block-size: var(--ui-thumb-width, 1rem);
+    margin-block-start: calc((0.375rem - var(--ui-thumb-width, 1rem)) / 2);
+  }
+
+  .ui-slider > input[type="range"]::-moz-range-thumb {
+    inline-size: var(--ui-thumb-width, 1rem);
+    block-size: var(--ui-thumb-width, 1rem);
+    border: 0;
+  }
+
+  .ui-slider > input:not([type="range"]) {
+    display: none;
+  }
+
+  // 原生 range 同样使用 .ui-slider；与组合式滑块共用位置、thumb 尺寸和颜色变量。
+  input.ui-slider[type="range"] {
+    --ui-slider-direction: to right;
+    display: block;
+    appearance: none;
+    outline: none;
+
+    &:dir(rtl) {
+      --ui-slider-direction: to left;
+    }
+
+    // 各引擎的伪元素分别声明，避免不支持的选择器使整条规则失效。
+    &::-webkit-slider-runnable-track {
+      @include slider-native-track;
+    }
+
+    &::-moz-range-track {
+      @include slider-native-track;
+    }
+
+    &::-webkit-slider-thumb {
+      @include slider-thumb;
+    }
+
+    &::-moz-range-thumb {
+      @include slider-thumb;
+    }
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      margin-block-start: calc((0.375rem - var(--ui-thumb-width, 1rem)) / 2);
+    }
+
+    &:hover:not(:disabled, [aria-disabled="true"])::-webkit-slider-thumb {
+      border-color: var(--ui-slider-color);
+    }
+
+    &:hover:not(:disabled, [aria-disabled="true"])::-moz-range-thumb {
+      border-color: var(--ui-slider-color);
+    }
+
+    &:focus-visible::-webkit-slider-thumb {
+      @include slider-thumb-focus;
+    }
+
+    &:focus-visible::-moz-range-thumb {
+      @include slider-thumb-focus;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ui-slider > .ui-slider-thumb {
+      transition: none;
+    }
+    input.ui-slider[type="range"]::-webkit-slider-thumb {
+      transition: none;
+    }
+    input.ui-slider[type="range"]::-moz-range-thumb {
+      transition: none;
+    }
+  }
+}

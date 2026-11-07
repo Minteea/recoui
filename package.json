@@ -1,0 +1,40 @@
+{
+  "name": "recoui",
+  "private": true,
+  "version": "0.0.0",
+  "description": "RecoUI styles and framework components",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@11.5.1",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=11.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @recoui/style dev",
+    "build": "pnpm -r --if-present run build",
+    "test": "pnpm -r --if-present run test",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "lint": "pnpm run typecheck && pnpm run lint:code",
+    "lint:code": "eslint \"packages/*/src/**/*.{ts,tsx}\" --max-warnings 0",
+    "format": "prettier --ignore-path .gitignore --write \"packages/**/*.{ts,tsx,js,jsx,json,css,scss,md,mdx}\" \"*.{json,yaml,md}\"",
+    "format:check": "prettier --ignore-path .gitignore --check \"packages/**/*.{ts,tsx,js,jsx,json,css,scss,md,mdx}\" \"*.{json,yaml,md}\"",
+    "storybook": "pnpm run storybook:style",
+    "storybook:style": "pnpm --filter @recoui/style storybook",
+    "storybook:solid": "pnpm --filter @recoui/solid storybook",
+    "storybook:react": "pnpm --filter @recoui/react storybook",
+    "storybook:all": "pnpm -r --parallel run storybook",
+    "build-storybook": "pnpm -r --if-present run build-storybook"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "@typescript-eslint/eslint-plugin": "7.9.0",
+    "@typescript-eslint/parser": "7.9.0",
+    "eslint": "8.57.0",
+    "eslint-plugin-eslint-comments": "3.2.0",
+    "eslint-plugin-no-only-tests": "3.1.0",
+    "prettier": "3.0.0",
+    "typescript": "5.9.3",
+    "@types/react": "^19.3.0"
+  }
+}

@@ -1,0 +1,270 @@
+@use "./button";
+
+// 沿用 Tabler 的 24px 画布、2px 描边和圆端点；不引入图标库依赖。
+@function native-icon($path, $stroke: "%23fff", $view-box: "0 0 24 24") {
+  @return url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='#{$view-box}' fill='none' stroke='#{$stroke}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='#{$path}'/%3E%3C/svg%3E");
+}
+
+@function chevron-down($stroke) {
+  @return native-icon("M6 9l6 6l6 -6", $stroke);
+}
+
+// 缩短斜线长度，不缩放描边：与 16px Tabler 图标相同的 1⅓px 描边。
+@function stepper-stroke($angle) {
+  @return linear-gradient(
+    $angle,
+    transparent calc(50% - 1rem / 24),
+    currentColor calc(50% - 1rem / 24),
+    currentColor calc(50% + 1rem / 24),
+    transparent calc(50% + 1rem / 24)
+  );
+}
+
+@layer components.ui {
+  .ui-input {
+    --ui-input-chevron-mask: #{chevron-down("%23fff")};
+    --ui-input-chevron-image: #{chevron-down("%2322222a")};
+  }
+
+  // 组合式输入框的外侧留白由根元素提供。
+  .ui-input > input[list] {
+    --ui-input-indicator-padding: 0px;
+  }
+
+  // 不支持原生图标伪元素的浏览器使用同形背景图，并为文字预留空间。
+  %ui-chevron-background {
+    padding-inline-end: calc(var(--ui-input-indicator-padding, var(--ui-padding-inline)) + 1.5rem);
+    background-image: var(--ui-input-chevron-image);
+    background-repeat: no-repeat;
+    background-size: 1rem 1rem;
+    background-position: right var(--ui-input-indicator-padding, var(--ui-padding-inline)) center;
+
+    &:dir(rtl) {
+      background-position: left var(--ui-input-indicator-padding, var(--ui-padding-inline)) center;
+    }
+
+    &:is(:disabled, [aria-disabled="true"]) {
+      --ui-input-chevron-image: #{chevron-down("%23818198")};
+    }
+  }
+
+  select.ui-input:not([multiple]):not([size]) {
+    @extend %ui-chevron-background;
+    appearance: none;
+  }
+
+  :is(input.ui-input, .ui-input > input)[list]:is(
+      :not([type]),
+      [type="text"],
+      [type="search"],
+      [type="email"],
+      [type="url"],
+      [type="tel"],
+      [type="number"]
+    ) {
+    @extend %ui-chevron-background;
+
+    &::-webkit-calendar-picker-indicator {
+      // Chromium 为 datalist 图标写入内联 list-item 和 1em 高度，需显式覆盖。
+      display: block !important;
+      flex: 0 0 auto;
+      box-sizing: content-box;
+      inline-size: 1rem;
+      block-size: 1rem !important;
+      margin: 0;
+      margin-inline-start: 0.5rem;
+      padding: 0;
+      border: 0;
+      list-style: none !important;
+      background: currentColor;
+      color: inherit;
+      mask: var(--ui-input-chevron-mask) center / contain no-repeat;
+      opacity: 1;
+      cursor: inherit;
+    }
+  }
+
+  @supports selector(input::-webkit-calendar-picker-indicator) {
+    :is(input.ui-input, .ui-input > input)[list]:is(
+        :not([type]),
+        [type="text"],
+        [type="search"],
+        [type="email"],
+        [type="url"],
+        [type="tel"],
+        [type="number"]
+      ) {
+      padding-inline-end: var(--ui-input-indicator-padding, var(--ui-padding-inline));
+      background-image: none;
+
+      // 禁用时浏览器不生成 datalist 图标，使用相同的背景图保留外观。
+      &:disabled {
+        padding-inline-end: calc(
+          var(--ui-input-indicator-padding, var(--ui-padding-inline)) + 1.5rem
+        );
+        background-image: var(--ui-input-chevron-image);
+      }
+    }
+  }
+
+  @supports (appearance: base-select) {
+    select.ui-input:not([multiple]):not([size]) {
+      appearance: base-select;
+      column-gap: 0.5rem;
+      padding-inline-end: var(--ui-padding-inline);
+      background-image: none;
+    }
+
+    // 与 WebKit 伪元素分别声明，避免不支持的选择器使另一条规则失效。
+    select.ui-input:not([multiple]):not([size])::picker-icon {
+      content: "";
+      display: block;
+      flex: 0 0 auto;
+      box-sizing: content-box;
+      inline-size: 1rem;
+      block-size: 1rem;
+      margin: 0;
+      margin-inline-start: auto;
+      padding: 0;
+      border: 0;
+      background: currentColor;
+      color: inherit;
+      mask: var(--ui-input-chevron-mask) center / contain no-repeat;
+      opacity: 1;
+    }
+  }
+
+  // 仅修饰已存在的原生按钮，不创建额外点击层或改变其可用状态。
+  // 同组只包含 WebKit/Blink 伪元素，避免其他引擎的选择器使整组失效。
+  %ui-native-input-indicator {
+    appearance: none;
+    flex: 0 0 auto;
+    align-self: center;
+    box-sizing: content-box;
+    inline-size: 1rem;
+    block-size: 1rem;
+    margin: 0;
+    margin-inline-start: 0.5rem;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: currentColor;
+    mask: var(--ui-input-indicator-mask) center / contain no-repeat;
+    cursor: pointer;
+
+    @media (forced-colors: active) {
+      forced-color-adjust: none;
+      background: ButtonText;
+    }
+  }
+
+  :is(input.ui-input, .ui-input > input):is(
+      [type="date"],
+      [type="datetime-local"],
+      [type="month"],
+      [type="week"],
+      [type="time"]
+    ) {
+    // 原生日期编辑区域已有内部 flex 布局，宿主使用 flex 会令其收缩到文字宽度。
+    display: inline-block;
+    --ui-block-display: block;
+  }
+
+  :is(input.ui-input, .ui-input > input):is(
+      [type="date"],
+      [type="datetime-local"],
+      [type="month"],
+      [type="week"]
+    ) {
+    --ui-input-indicator-mask: #{native-icon(
+        "M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12M16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005"
+      )};
+  }
+
+  :is(input.ui-input, .ui-input > input)[type="time"] {
+    --ui-input-indicator-mask: #{native-icon("M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0M12 7v5l3 3")};
+  }
+
+  :is(input.ui-input, .ui-input > input):is(
+      [type="date"],
+      [type="datetime-local"],
+      [type="month"],
+      [type="week"],
+      [type="time"]
+    )::-webkit-calendar-picker-indicator {
+    @extend %ui-native-input-indicator;
+    opacity: 1;
+  }
+
+  :is(input.ui-input, .ui-input > input)[type="number"] {
+    &::-webkit-inner-spin-button {
+      // 一组等于一个 icon 型 addon-button；上下半区由浏览器原生处理。
+      appearance: none;
+      flex: 0 0 auto;
+      align-self: center;
+      box-sizing: border-box;
+      inline-size: var(--ui-addon-height);
+      block-size: var(--ui-addon-height);
+      margin: 0;
+      margin-inline-start: 0.5rem;
+      padding: 0;
+      border: 1px solid transparent;
+      border-radius: max(0px, calc(var(--radius) - 0.125rem));
+      color: inherit;
+      --ui-display-color: var(--color-foreground, currentColor);
+      cursor: pointer;
+      background-color: transparent;
+      // 四条等粗斜线绘制小 Chevron，底色不受图标 mask 裁切。
+      background-image: stepper-stroke(135deg), stepper-stroke(45deg), stepper-stroke(45deg),
+        stepper-stroke(135deg);
+      background-repeat: no-repeat;
+      background-origin: border-box;
+      background-size: 0.1875rem 0.1875rem;
+      background-position:
+        calc(50% - 0.09375rem) calc(25% - 0.046875rem),
+        calc(50% + 0.09375rem) calc(25% - 0.046875rem),
+        calc(50% - 0.09375rem) calc(75% + 0.046875rem),
+        calc(50% + 0.09375rem) calc(75% + 0.046875rem);
+      transition: background-color var(--transition);
+
+      &:hover {
+        @extend %ui-ghost-button-hover;
+      }
+
+      @media (forced-colors: active) {
+        forced-color-adjust: none;
+        color: ButtonText;
+      }
+    }
+  }
+
+  :is(input.ui-input, .ui-input > input)[type="search"] {
+    --ui-input-indicator-mask: #{native-icon("M18 6l-12 12M6 6l12 12")};
+
+    &::-webkit-search-cancel-button {
+      @extend %ui-native-input-indicator;
+    }
+  }
+
+  // 保留 Edge 原生眼睛及其状态切换：::-ms-reveal 没有对应的状态选择器。
+  :is(input.ui-input, .ui-input > input)[type="password"]::-ms-reveal {
+    box-sizing: border-box;
+    inline-size: 1rem;
+    block-size: 1rem;
+    margin: 0;
+    margin-inline-start: 0.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-sm);
+    color: inherit;
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+  }
+
+  :is(input.ui-input, .ui-input > input)[type="password"]::-ms-reveal:hover {
+    background-color: color-mix(in oklch, currentColor 10%, transparent);
+  }
+}

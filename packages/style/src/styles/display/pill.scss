@@ -1,0 +1,67 @@
+@use "./badge";
+
+@layer components.ui {
+  .ui-pill {
+    @extend %ui-badge;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+
+    > span {
+      min-inline-size: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .ui-pill-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+    inline-size: 1rem;
+    block-size: 1rem;
+    margin: 0;
+    padding: 0;
+    appearance: none;
+    border: 0;
+    border-radius: max(0px, calc(var(--ui-radius, var(--radius-sm)) - 1px));
+    outline: 0 solid transparent;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background-color var(--transition),
+      outline var(--transition);
+
+    &:hover:not(:disabled, [aria-disabled="true"]) {
+      background: color-mix(in oklch, currentColor 12%, transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+    }
+  }
+
+  .ui-pill[aria-disabled="true"],
+  .ui-input:is([aria-disabled="true"], :has(> input:disabled)) > .ui-pill {
+    --ui-color: var(--color-disabled);
+    cursor: not-allowed;
+  }
+
+  .ui-pill-button:is(:disabled, [aria-disabled="true"]),
+  .ui-pill[aria-disabled="true"] > .ui-pill-button,
+  .ui-input:is([aria-disabled="true"], :has(> input:disabled)) > .ui-pill > .ui-pill-button {
+    background: transparent;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ui-pill-button {
+      transition: none;
+    }
+  }
+}

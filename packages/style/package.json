@@ -1,0 +1,52 @@
+{
+  "name": "@recoui/style",
+  "version": "0.0.0",
+  "description": "Framework-independent RecoUI styles",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ],
+  "style": "./dist/index.css",
+  "sass": "./src/index.scss",
+  "exports": {
+    ".": {
+      "sass": "./src/index.scss",
+      "style": "./dist/index.css",
+      "default": "./dist/index.css"
+    },
+    "./style.css": "./dist/index.css",
+    "./scss": "./src/index.scss",
+    "./scss/*": "./src/styles/*",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite serve dev",
+    "build": "sass src/index.scss dist/index.css --style=compressed --no-source-map",
+    "build:watch": "sass src/index.scss dist/index.css --style=compressed --no-source-map --watch",
+    "typecheck": "tsc --noEmit",
+    "storybook": "storybook dev -p 36006",
+    "build-storybook": "storybook build",
+    "prepack": "pnpm run build"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "10.4.2",
+    "@storybook/addon-docs": "10.4.2",
+    "@tabler/icons-solidjs": "3.50.0",
+    "clsx": "2.1.1",
+    "sass": "1.100.0",
+    "solid-js": "1.8.17",
+    "storybook": "10.4.2",
+    "storybook-solidjs-vite": "10.1.1",
+    "vite": "7.3.5",
+    "vite-plugin-solid": "2.11.9"
+  }
+}

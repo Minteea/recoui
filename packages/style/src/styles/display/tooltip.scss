@@ -1,0 +1,161 @@
+@layer components.ui {
+  // tooltip 显示样式
+  %ui-tooltip {
+    z-index: var(--ui-tooltip-z-index, 1100);
+    box-sizing: border-box;
+    inline-size: max-content;
+    max-inline-size: min(var(--ui-tooltip-max-width, 20rem), calc(100vw - 2rem));
+    margin: 0;
+    padding: 0.375rem 0.5rem;
+    border: 0;
+    border-radius: var(--radius-sm);
+    background: var(--color-foreground);
+    color: var(--color-background);
+    box-shadow: var(--shadow-sm);
+    font-family: var(--font-family, inherit);
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: start;
+    text-decoration: none;
+    text-transform: none;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  // Portal / 浮层定位库可以直接设置 top、left 或 transform。
+  .ui-tooltip {
+    @extend %ui-tooltip;
+    position: fixed;
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--transition),
+      visibility var(--transition),
+      display var(--transition);
+    transition-behavior: allow-discrete;
+
+    &[hidden] {
+      display: none;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+  }
+
+  @starting-style {
+    .ui-tooltip {
+      opacity: 0;
+    }
+  }
+
+  .ui-tooltip-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
+    inline-size: fit-content;
+    vertical-align: middle;
+
+    &::before,
+    &::after {
+      position: absolute;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity var(--transition),
+        visibility var(--transition);
+    }
+
+    &::after {
+      @extend %ui-tooltip;
+      content: attr(data-tooltip);
+      bottom: calc(100% + var(--ui-tooltip-offset, 0.5rem));
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    // 透明区域连接目标和提示，鼠标跨过间隙时仍可保持显示。
+    &::before {
+      content: "";
+      z-index: var(--ui-tooltip-z-index, 1100);
+      bottom: 100%;
+      left: 0;
+      inline-size: 100%;
+      block-size: var(--ui-tooltip-offset, 0.5rem);
+    }
+
+    &[data-side="bottom"] {
+      &::after {
+        top: calc(100% + var(--ui-tooltip-offset, 0.5rem));
+        bottom: auto;
+      }
+      &::before {
+        top: 100%;
+        bottom: auto;
+      }
+    }
+
+    &:is([data-side="left"], [data-side="right"]) {
+      &::after {
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%);
+      }
+      &::before {
+        top: 0;
+        bottom: auto;
+        inline-size: var(--ui-tooltip-offset, 0.5rem);
+        block-size: 100%;
+      }
+    }
+
+    &[data-side="left"] {
+      &::after {
+        right: calc(100% + var(--ui-tooltip-offset, 0.5rem));
+        left: auto;
+      }
+      &::before {
+        right: 100%;
+        left: auto;
+      }
+    }
+
+    &[data-side="right"] {
+      &::after {
+        left: calc(100% + var(--ui-tooltip-offset, 0.5rem));
+      }
+      &::before {
+        left: 100%;
+      }
+    }
+
+    &:not([data-state="closed"]):is(:hover, :focus-within, [data-state="open"]) {
+      &::before,
+      &::after {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+    }
+
+    &:not([data-tooltip]),
+    &[data-tooltip=""] {
+      &::before,
+      &::after {
+        content: none;
+      }
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ui-tooltip,
+    .ui-tooltip-wrapper::before,
+    .ui-tooltip-wrapper::after {
+      transition: none;
+    }
+  }
+}

@@ -1,0 +1,110 @@
+@layer components.ui {
+  // checkbox 和 radio 结构性样式
+  .ui-checkbox,
+  .ui-radio {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+
+    border-radius: var(--ui-radius, 0);
+    border: 1px solid var(--ui-border);
+    background: var(--ui-fill);
+
+    color: var(--color-white);
+
+    cursor: pointer;
+    transition:
+      border-color var(--transition),
+      background-color var(--transition),
+      box-shadow var(--transition);
+  }
+
+  // checkbox 和 radio 基本外观
+  .ui-checkbox,
+  .ui-radio {
+    --ui-color: var(--color-primary, grey);
+    --ui-border: var(--color-border);
+    --ui-fill: var(--color-background);
+    --ui-text: var(--color-foreground);
+    --ui-fill-checked: var(--ui-color);
+    --ui-ring: oklch(from var(--ui-color) l c h / 10%);
+  }
+
+  .ui-checkbox {
+    --ui-radius: var(--radius-sm);
+  }
+  .ui-radio {
+    --ui-radius: 1000px;
+  }
+
+  .ui-radio::before,
+  .ui-checkbox::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transition:
+      opacity var(--transition),
+      transform var(--transition),
+      background-color var(--transition);
+    transform: scale(0.6);
+  }
+
+  .ui-radio::before {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background-color: currentColor;
+    color: var(--color-white);
+  }
+
+  .ui-checkbox::before {
+    width: 0.875rem;
+    height: 0.875rem;
+    background-color: currentColor;
+    // 描边绘制两段勾线，避免未闭合的填充路径被绘制成三角形。
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3 8l3.5 3.5L13 4.5' fill='none' stroke='%23fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>")
+      center/contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M3 8l3.5 3.5L13 4.5' fill='none' stroke='%23fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>")
+      center/contain no-repeat;
+  }
+
+  .ui-checkbox:is(:checked, :indeterminate)::before,
+  .ui-radio:checked::before {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .ui-checkbox:is(:checked, :indeterminate),
+  .ui-radio:checked {
+    background: var(--ui-fill-checked);
+    border-color: var(--ui-fill-checked);
+  }
+
+  // 不确定状态独立于 checked，优先显示居中的圆端点横线。
+  .ui-checkbox:indeterminate::before {
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 8h8' fill='none' stroke='%23fff' stroke-width='2.5' stroke-linecap='round'/></svg>")
+      center/contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M4 8h8' fill='none' stroke='%23fff' stroke-width='2.5' stroke-linecap='round'/></svg>")
+      center/contain no-repeat;
+  }
+
+  .ui-checkbox:focus-visible,
+  .ui-radio:focus-visible {
+    outline: none;
+    border-color: var(--ui-color);
+    box-shadow: 0 0 0 4px var(--ui-ring);
+  }
+
+  :is(.ui-checkbox, .ui-radio):is(:disabled, [aria-disabled="true"]) {
+    color: var(--color-disabled);
+    border-color: var(--ui-border);
+    background: color-mix(in oklch, var(--color-foreground) 2%, var(--color-background));
+    cursor: not-allowed;
+  }
+}

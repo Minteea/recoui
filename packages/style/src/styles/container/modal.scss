@@ -1,0 +1,91 @@
+@use "./box.scss";
+
+@layer components.ui {
+  .ui-modal {
+    @extend %ui-box;
+    position: fixed;
+    z-index: var(--ui-modal-z-index, 1000);
+    inset: 0;
+    inline-size: min(var(--ui-modal-width, 32rem), calc(100% - 2rem));
+    max-inline-size: calc(100% - 2rem);
+    block-size: fit-content;
+    max-block-size: calc(100vh - 2rem);
+    max-block-size: calc(100dvh - 2rem);
+    margin: auto;
+    padding: 1.5rem;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: 0;
+    color: var(--color-foreground);
+    box-shadow: var(--shadow);
+    font-family: inherit;
+    font-size: var(--font-size-input, 0.875rem);
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--transition),
+      transform var(--transition),
+      display var(--transition),
+      overlay var(--transition);
+    transition-behavior: allow-discrete;
+  }
+
+  dialog.ui-modal::backdrop,
+  .ui-modal-backdrop {
+    background: var(--ui-modal-backdrop-color, rgb(0 0 0 / 45%));
+    transition:
+      background-color var(--transition),
+      display var(--transition),
+      overlay var(--transition);
+    transition-behavior: allow-discrete;
+  }
+
+  // 普通元素通过外层遮罩覆盖页面；打开、关闭与焦点管理由使用方实现。
+  .ui-modal-backdrop {
+    position: fixed;
+    z-index: var(--ui-modal-z-index, 1000);
+    inset: 0;
+  }
+
+  dialog.ui-modal:not([open]),
+  .ui-modal[hidden] {
+    display: none;
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.98);
+  }
+
+  .ui-modal-backdrop[hidden] {
+    display: none;
+  }
+
+  dialog.ui-modal:not([open])::backdrop,
+  .ui-modal-backdrop[hidden] {
+    background-color: transparent;
+  }
+
+  // 遮罩隐藏时，内部面板同步退出；隐藏结束前保留节点才能完整播放过渡。
+  .ui-modal-backdrop[hidden] > .ui-modal {
+    opacity: 0;
+    transform: translateY(0.5rem) scale(0.98);
+  }
+
+  @starting-style {
+    .ui-modal {
+      opacity: 0;
+      transform: translateY(0.5rem) scale(0.98);
+    }
+
+    dialog.ui-modal[open]::backdrop,
+    .ui-modal-backdrop {
+      background-color: transparent;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ui-modal,
+    dialog.ui-modal::backdrop,
+    .ui-modal-backdrop {
+      transition: none;
+    }
+  }
+}

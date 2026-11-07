@@ -1,0 +1,55 @@
+@layer components.ui {
+  %ui-badge {
+    --ui-color: var(--color-foreground);
+    --ui-radius: var(--radius-sm);
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    gap: 0.25rem;
+    box-sizing: border-box;
+    inline-size: fit-content;
+    min-block-size: 1.25rem;
+    margin: 0;
+    padding: 0.0625rem 0.5rem;
+    border: 1px solid transparent;
+    border-radius: var(--ui-radius);
+    background: oklch(from var(--ui-color) calc(l * 0.05 + 0.95) calc(c * 0.1) h);
+    color: var(--ui-color);
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1rem;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+
+    &[data-radius] {
+      --ui-radius: attr(data-radius type(*), var(--radius-sm));
+
+      &:is([data-radius="default"], [data-radius=""]) {
+        --ui-radius: var(--radius-sm);
+      }
+
+      &[data-radius="rounded"] {
+        --ui-radius: 9999px;
+      }
+    }
+
+    // default / light 共用浅色外观，空值和未指定 variant 时同样适用。
+    &[data-variant="filled"] {
+      background: var(--ui-color);
+      color: var(--color-white, white);
+    }
+
+    &[data-variant="outline"] {
+      border-color: var(--ui-color);
+      background: transparent;
+    }
+  }
+
+  .ui-badge {
+    @extend %ui-badge;
+  }
+}
