@@ -1,0 +1,46 @@
+@layer components.ui {
+  table.ui-table {
+    box-sizing: border-box;
+    inline-size: 100%;
+    margin: 0;
+    border: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: var(--color-foreground);
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    text-align: start;
+
+    > caption {
+      padding: 0.75rem;
+      color: var(--color-disabled);
+      font-weight: 400;
+      // text-align: center;
+    }
+
+    > :is(thead, tbody, tfoot) {
+      border: 0;
+    }
+
+    // 限定为当前表格的行和单元格，避免样式穿透嵌套表格。
+    > tr,
+    > :is(thead, tbody, tfoot) > tr {
+      border: 0;
+      border-block-end: 1px solid var(--color-border);
+    }
+
+    > tr > :is(th, td),
+    > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+      padding: 0.625rem 0.75rem;
+      border: 0;
+      text-align: inherit;
+      vertical-align: middle;
+    }
+
+    > tr > th,
+    > :is(thead, tbody, tfoot) > tr > th {
+      font-weight: 600;
+    }
+  }
+}

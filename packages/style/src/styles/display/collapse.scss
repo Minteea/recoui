@@ -1,0 +1,5 @@
+@layer components.ui {
+  .ui-collapse:not([data-expanded]) {
+    display: none;
+  }
+}
