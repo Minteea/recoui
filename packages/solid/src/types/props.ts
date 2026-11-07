@@ -1,4 +1,3 @@
-
 /** 色彩类型 */
 export type ColorType = "neutral" | "primary" | "success" | "danger" | "error" | "warning" | "info";
 
@@ -11,4 +10,3 @@ export interface UIColorProps {
 export interface UIRadiusProps {
   radius?: "rounded" | string;
 }
-
