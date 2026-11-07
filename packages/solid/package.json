@@ -1,6 +1,6 @@
 {
   "name": "@recoui/solid",
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.0",
   "description": "Solid components built with Reco UI styles",
   "license": "MIT",
   "type": "module",
